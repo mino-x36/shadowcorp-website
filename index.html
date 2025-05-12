@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <title>Shadow Corporation - Elite Gaming Organization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="src/index.css">
+</head>
+<body class="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+  <!-- Background canvas for particles -->
+  <canvas id="particlesBg" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
+
+  <!-- Main content -->
+  <main class="relative z-0">
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 bg-black opacity-60 z-0"></div>
+      <div class="content-container text-center relative z-10 px-6">
+        <div class="mb-8 transform scale-100 hover:scale-105 transition-transform duration-500">
+          <div class="inline-block relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="hero-logo" class="mx-auto text-purple-500">
+              <path d="M12 2L4 10 12 18 20 10 12 2z"></path>
+              <path d="M12 18v4"></path>
+              <path d="M8 22h8"></path>
+            </svg>
+            <div class="absolute inset-0 bg-purple-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
+          </div>
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 text-white tracking-tighter">
+          SHADOW <span class="text-purple-500">CORPORATION</span>
+        </h1>
+        
+        <div class="h-8 mb-6">
+          <span id="typing-text" class="text-xl text-purple-300"></span>
+        </div>
+        
+        <p class="text-gray-300 max-w-2xl mx-auto mb-8">
+          A clandestine organization operating at the intersection of advanced technology and strategic operations. 
+          Join our elite network of specialists and shape the future from the shadows.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="join.html" class="bg-purple-700 hover:bg-purple-600 text-white font-semibold px-8 py-3 rounded neon-border transition-all duration-300 flex items-center justify-center">
+            <span>Join Our Ranks</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+          <a href="divisions.html" class="bg-transparent border border-purple-500 hover:bg-purple-900 text-white font-semibold px-8 py-3 rounded transition-colors duration-300">
+            Explore Divisions
+          </a>
+        </div>
+      </div>
+      
+      <!-- Status banner -->
+      <div id="status-banner" class="absolute bottom-0 left-0 right-0 bg-gray-900 border-t border-purple-900 p-2 text-center">
+        <p id="status-message" class="text-sm text-gray-300">
+          <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+          All systems operational
+        </p>
+      </div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="py-20 bg-gradient-to-b from-gray-900 to-black relative">
+      <div class="absolute inset-0 grid-pattern opacity-20"></div>
+      <div class="content-container px-6">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold mb-8 text-white text-center">
+            <span class="border-b-2 border-purple-500 pb-2">Organization Lore</span>
+          </h2>
+          
+          <div class="bg-gray-900 bg-opacity-50 p-6 rounded-lg backdrop-blur-sm border border-gray-800">
+            <p class="text-gray-300 mb-4">
+              Founded in 2120 amidst the chaos of the Third Corporate War, Shadow Corporation emerged as a response to the unchecked power of global megacorporations. What began as a collective of elite hackers, military specialists, and corporate defectors has evolved into one of the most sophisticated covert operations networks in the known sectors.
+            </p>
+            <p class="text-gray-300 mb-4">
+              Our mission extends beyond the conventional boundaries of corporate and military operations. We specialize in high-risk, high-reward strategic initiatives that conventional organizations cannot—or will not—undertake.
+            </p>
+            <p class="text-gray-300">
+              Shadow Corporation operatives are known for their unparalleled expertise, adaptability, and absolute loyalty to the organization's objectives. Our decentralized command structure and compartmentalized operations ensure that we remain several steps ahead of our adversaries.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Announcements Section -->
+    <section class="py-16 relative">
+      <div class="content-container px-6">
+        <h2 class="text-3xl font-bold mb-8 text-white text-center">
+          <span class="border-b-2 border-purple-500 pb-2">Latest Transmissions</span>
+        </h2>
+        
+        <div id="announcements-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Announcements will be populated here via JavaScript -->
+          <div class="bg-gray-900 bg-opacity-40 p-6 rounded-lg border border-gray-800 hover:border-purple-800 transition-colors">
+            <h3 class="text-xl font-semibold mb-2 text-purple-400">Loading...</h3>
+            <p class="text-gray-400">Retrieving data...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initNavigation, initFooter } from './src/js/navigation.js';
+    import { initParticles, initTypingEffect, initGlitchEffect } from './src/js/animations.js';
+    import { initializeStorage, getAnnouncements, getStatus, formatDate } from './src/js/utils.js';
+    
+    // Initialize components and utilities
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize storage
+      initializeStorage();
+      
+      // Initialize navigation and footer
+      initNavigation();
+      initFooter();
+      
+      // Initialize animations
+      initParticles('particlesBg');
+      initTypingEffect('typing-text', [
+        'Elite Gaming Organization',
+        'Strategic Operations Network',
+        'Technological Advancement',
+        'Covert Digital Operations'
+      ]);
+      initGlitchEffect('hero-logo');
+      
+      // Display announcements
+      displayAnnouncements();
+      
+      // Display status
+      displayStatus();
+    });
+    
+    function displayAnnouncements() {
+      const announcements = getAnnouncements();
+      const container = document.getElementById('announcements-container');
+      
+      if (container && announcements.length > 0) {
+        container.innerHTML = '';
+        
+        // Display up to 4 announcements
+        const displayCount = Math.min(announcements.length, 4);
+        for (let i = 0; i < displayCount; i++) {
+          const announcement = announcements[i];
+          const date = formatDate(announcement.date);
+          
+          const announcementElement = document.createElement('div');
+          announcementElement.className = 'bg-gray-900 bg-opacity-40 p-6 rounded-lg border border-gray-800 hover:border-purple-800 transition-colors';
+          announcementElement.innerHTML = `
+            <h3 class="text-xl font-semibold mb-2 text-purple-400">${announcement.title}</h3>
+            <p class="text-gray-300 mb-3">${announcement.content}</p>
+            <p class="text-xs text-gray-500">${date}</p>
+          `;
+          
+          container.appendChild(announcementElement);
+        }
+      }
+    }
+    
+    function displayStatus() {
+      const status = getStatus();
+      const statusMessage = document.getElementById('status-message');
+      const statusIndicator = statusMessage.querySelector('span');
+      
+      if (statusMessage) {
+        // Set message
+        statusMessage.textContent = status.message;
+        
+        // Prepend status indicator
+        const indicator = document.createElement('span');
+        let indicatorColor = 'bg-green-500';
+        
+        if (status.level === 'warning') {
+          indicatorColor = 'bg-yellow-500';
+        } else if (status.level === 'danger') {
+          indicatorColor = 'bg-red-500';
+        }
+        
+        indicator.className = `inline-block w-2 h-2 rounded-full ${indicatorColor} mr-2`;
+        statusMessage.prepend(indicator);
+      }
+    }
+  </script>
+</body>
+</html>

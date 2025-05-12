@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <title>Admin Dashboard - Shadow Corporation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../src/index.css">
+</head>
+<body class="min-h-screen bg-gradient-to-b from-black to-gray-900">
+  <!-- Background canvas for particles -->
+  <canvas id="particlesBg" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
+
+  <div class="flex h-screen overflow-hidden" id="app-container">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-900 border-r border-gray-800 hidden md:block">
+      <div class="p-6">
+        <div class="flex items-center mb-8">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500 mr-3">
+            <path d="M12 2L4 10 12 18 20 10 12 2z"></path>
+          </svg>
+          <span class="text-lg font-bold tracking-wider text-white">SHADOW <span class="text-purple-500">ADMIN</span></span>
+        </div>
+        
+        <nav class="space-y-2">
+          <a href="#dashboard" class="block py-2.5 px-4 rounded transition duration-200 text-white bg-purple-900 hover:bg-purple-800">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+              </svg>
+              Dashboard
+            </div>
+          </a>
+          
+          <a href="#status" class="block py-2.5 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              Status Update
+            </div>
+          </a>
+          
+          <a href="#announcements" class="block py-2.5 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Announcements
+            </div>
+          </a>
+          
+          <a href="#contacts" class="block py-2.5 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Contact Submissions
+            </div>
+          </a>
+        </nav>
+      </div>
+      
+      <div class="px-6 py-4 border-t border-gray-800">
+        <a href="#" id="logout-button" class="block py-2 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </div>
+        </a>
+      </div>
+    </aside>
+    
+    <!-- Mobile sidebar toggle -->
+    <div class="fixed top-4 left-4 md:hidden z-20">
+      <button id="mobile-menu-button" class="p-2 rounded-md bg-gray-800 text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" x2="20" y1="12" y2="12"></line>
+          <line x1="4" x2="20" y1="6" y2="6"></line>
+          <line x1="4" x2="20" y1="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile sidebar -->
+    <div id="mobile-sidebar" class="fixed inset-0 bg-gray-900 z-10 transform -translate-x-full transition-transform duration-300 md:hidden">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500 mr-3">
+              <path d="M12 2L4 10 12 18 20 10 12 2z"></path>
+            </svg>
+            <span class="text-lg font-bold tracking-wider text-white">SHADOW <span class="text-purple-500">ADMIN</span></span>
+          </div>
+          
+          <button id="close-mobile-menu" class="text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <nav class="space-y-2">
+          <a href="#dashboard" class="mobile-nav-link block py-2.5 px-4 rounded transition duration-200 text-white bg-purple-900 hover:bg-purple-800">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+              </svg>
+              Dashboard
+            </div>
+          </a>
+          
+          <a href="#status" class="mobile-nav-link block py-2.5 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              Status Update
+            </div>
+          </a>
+          
+          <a href="#announcements" class="mobile-nav-link block py-2.5 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Announcements
+            </div>
+          </a>
+          
+          <a href="#contacts" class="mobile-nav-link block py-2.5 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Contact Submissions
+            </div>
+          </a>
+        </nav>
+        
+        <div class="mt-8 pt-4 border-t border-gray-800">
+          <a href="#" id="mobile-logout-button" class="block py-2 px-4 rounded transition duration-200 text-gray-400 hover:bg-gray-800 hover:text-white">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Logout
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main content area -->
+    <div class="flex-1 overflow-x-hidden overflow-y-auto">
+      <!-- Dashboard view -->
+      <div id="dashboard-view" class="view-content p-6">
+        <h1 class="text-3xl font-bold mb-6 text-white">Admin Dashboard</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <!-- Status card -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-semibold text-white">System Status</h2>
+              <div id="status-indicator" class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <p id="current-status" class="text-gray-300 mb-2">All systems operational</p>
+            <p class="text-xs text-gray-500" id="status-timestamp">Updated: Just now</p>
+          </div>
+          
+          <!-- Announcements card -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-semibold text-white">Announcements</h2>
+              <span class="text-sm text-gray-400" id="announcement-count">0</span>
+            </div>
+            <p class="text-gray-300">Latest: <span id="latest-announcement" class="text-purple-400">No announcements</span></p>
+          </div>
+          
+          <!-- Contacts card -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-semibold text-white">Recent Contacts</h2>
+              <span class="text-sm text-gray-400" id="contact-count">0</span>
+            </div>
+            <div class="flex items-center">
+              <div id="unread-indicator" class="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
+              <p class="text-gray-300"><span id="unread-count">0</span> unread messages</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h2 class="text-xl font-semibold text-white mb-4">Quick Actions</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button id="quick-status-btn" class="py-3 px-4 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              Update Status
+            </button>
+            
+            <button id="quick-announcement-btn" class="py-3 px-4 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              New Announcement
+            </button>
+            
+            <button id="quick-view-contacts-btn" class="py-3 px-4 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              View Contacts
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Status update view -->
+      <div id="status-view" class="view-content p-6 hidden">
+        <h1 class="text-3xl font-bold mb-6 text-white">Update Status</h1>
+        
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+          <h2 class="text-xl font-semibold text-white mb-4">Current Status</h2>
+          <div class="flex items-center mb-4">
+            <div id="status-view-indicator" class="w-3 h-3 rounded-full bg-green-500 mr-3"></div>
+            <p id="status-view-message" class="text-gray-300">All systems operational</p>
+          </div>
+          <p class="text-xs text-gray-500" id="status-view-timestamp">Updated: Just now</p>
+        </div>
+        
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h2 class="text-xl font-semibold text-white mb-4">Update Status</h2>
+          
+          <form id="status-form" class="space-y-4">
+            <div>
+              <label for="status-message" class="block text-gray-300 mb-2">Status Message</label>
+              <input type="text" id="status-message" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:border-purple-500 focus:outline-none" required>
+            </div>
+            
+            <div>
+              <label for="status-level" class="block text-gray-300 mb-2">Status Level</label>
+              <select id="status-level" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:border-purple-500 focus:outline-none">
+                <option value="normal">Normal - All systems operational</option>
+                <option value="warning">Warning - Minor issues detected</option>
+                <option value="danger">Danger - Critical systems affected</option>
+              </select>
+            </div>
+            
+            <div class="pt-4">
+              <button type="submit" class="bg-purple-700 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded transition-colors">
+                Update Status
+              </button>
+            </div>
+          </form>
+          
+          <div id="status-update-message" class="hidden mt-4 p-4 rounded text-center"></div>
+        </div>
+      </div>
+      
+      <!-- Announcements view -->
+      <div id="announcements-view" class="view-content p-6 hidden">
+        <h1 class="text-3xl font-bold mb-6 text-white">Manage Announcements</h1>
+        
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+          <h2 class="text-xl font-semibold text-white mb-4">Create New Announcement</h2>
+          
+          <form id="announcement-form" class="space-y-4">
+            <div>
+              <label for="announcement-title" class="block text-gray-300 mb-2">Announcement Title</label>
+              <input type="text" id="announcement-title" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:border-purple-500 focus:outline-none" required>
+            </div>
+            
+            <div>
+              <label for="announcement-content" class="block text-gray-300 mb-2">Announcement Content</label>
+              <textarea id="announcement-content" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-white focus:border-purple-500 focus:outline-none" required></textarea>
+            </div>
+            
+            <div class="pt-4">
+              <button type="submit" class="bg-purple-700 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded transition-colors">
+                Post Announcement
+              </button>
+            </div>
+          </form>
+          
+          <div id="announcement-message" class="hidden mt-4 p-4 rounded text-center"></div>
+        </div>
+        
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h2 class="text-xl font-semibold text-white mb-4">Recent Announcements</h2>
+          
+          <div id="announcements-list" class="space-y-4">
+            <p class="text-gray-400">Loading announcements...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Contacts view -->
+      <div id="contacts-view" class="view-content p-6 hidden">
+        <h1 class="text-3xl font-bold mb-6 text-white">Contact Submissions</h1>
+        
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-white">Recent Messages</h2>
+            <div class="flex items-center">
+              <label for="contact-filter" class="text-gray-300 mr-2 text-sm">Filter:</label>
+              <select id="contact-filter" class="bg-gray-700 border border-gray-600 rounded p-1 text-white text-sm focus:border-purple-500 focus:outline-none">
+                <option value="all">All</option>
+                <option value="contact">Contact Messages</option>
+                <option value="recruitment">Recruitment Applications</option>
+              </select>
+            </div>
+          </div>
+          
+          <div id="contacts-list" class="space-y-4">
+            <p class="text-gray-400">Loading messages...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initParticles } from '../src/js/animations.js';
+    import { initializeStorage, getAnnouncements, getStatus, getContacts, updateStatus, addAnnouncement, deleteAnnouncement, formatDate } from '../src/js/utils.js';
+    
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verify authentication
+      if (sessionStorage.getItem('shadowcorp_auth') !== 'true') {
+        // Redirect to login page if not authenticated
+        window.location.href = '../admin-login.html';
+        return;
+      }
+      
+      // Initialize storage and UI
+      initParticles('particlesBg');
+      initializeStorage();
+      setupNavigation();
+      loadDashboardData();
+      
+      // Setup event listeners
+      setupEventListeners();
+    });
+    
+    function setupNavigation() {
+      // Desktop navigation
+      document.querySelectorAll('aside a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (link.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const target = link.getAttribute('href').replace('#', '');
+            navigateTo(target);
+            
+            // Update active state
+            document.querySelectorAll('aside a').forEach(l => {
+              l.classList.remove('bg-purple-900', 'text-white');
+              l.classList.add('text-gray-400');
+            });
+            link.classList.add('bg-purple-900', 'text-white');
+            link.classList.remove('text-gray-400');
+          }
+        });
+      });
+      
+      // Mobile navigation
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (link.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const target = link.getAttribute('href').replace('#', '');
+            navigateTo(target);
+            
+            // Close mobile menu
+            document.getElementById('mobile-sidebar').classList.add('-translate-x-full');
+            
+            // Update active state
+            document.querySelectorAll('.mobile-nav-link').forEach(l => {
+              l.classList.remove('bg-purple-900', 'text-white');
+              l.classList.add('text-gray-400');
+            });
+            link.classList.add('bg-purple-900', 'text-white');
+            link.classList.remove('text-gray-400');
+          }
+        });
+      });
+      
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-button').addEventListener('click', () => {
+        document.getElementById('mobile-sidebar').classList.remove('-translate-x-full');
+      });
+      
+      document.getElementById('close-mobile-menu').addEventListener('click', () => {
+        document.getElementById('mobile-sidebar').classList.add('-translate-x-full');
+      });
+      
+      // Logout handlers
+      document.getElementById('logout-button').addEventListener('click', (e) => {
+        e.preventDefault();
+        logout();
+      });
+      
+      document.getElementById('mobile-logout-button').addEventListener('click', (e) => {
+        e.preventDefault();
+        logout();
+      });
+    }
+    
+    function navigateTo(view) {
+      // Hide all views
+      document.querySelectorAll('.view-content').forEach(el => {
+        el.classList.add('hidden');
+      });
+      
+      // Show selected view
+      const viewElement = document.getElementById(`${view}-view`);
+      if (viewElement) {
+        viewElement.classList.remove('hidden');
+        
+        // Load view specific data
+        if (view === 'dashboard') {
+          loadDashboardData();
+        } else if (view === 'status') {
+          loadStatusData();
+        } else if (view === 'announcements') {
+          loadAnnouncementsData();
+        } else if (view === 'contacts') {
+          loadContactsData();
+        }
+      }
+    }
+    
+    function logout() {
+      // Clear auth session
+      sessionStorage.removeItem('shadowcorp_auth');
+      
+      // Redirect to login page
+      window.location.href = '../admin-login.html';
+    }
+    
+    function setupEventListeners() {
+      // Quick action buttons
+      document.getElementById('quick-status-btn').addEventListener('click', () => {
+        navigateTo('status');
+        // Update sidebar active state
+        document.querySelectorAll('aside a').forEach(l => {
+          l.classList.remove('bg-purple-900', 'text-white');
+          l.classList.add('text-gray-400');
+        });
+        document.querySelector('aside a[href="#status"]').classList.add('bg-purple-900', 'text-white');
+        document.querySelector('aside a[href="#status"]').classList.remove('text-gray-400');
+      });
+      
+      document.getElementById('quick-announcement-btn').addEventListener('click', () => {
+        navigateTo('announcements');
+        // Update sidebar active state
+        document.querySelectorAll('aside a').forEach(l => {
+          l.classList.remove('bg-purple-900', 'text-white');
+          l.classList.add('text-gray-400');
+        });
+        document.querySelector('aside a[href="#announcements"]').classList.add('bg-purple-900', 'text-white');
+        document.querySelector('aside a[href="#announcements"]').classList.remove('text-gray-400');
+      });
+      
+      document.getElementById('quick-view-contacts-btn').addEventListener('click', () => {
+        navigateTo('contacts');
+        // Update sidebar active state
+        document.querySelectorAll('aside a').forEach(l => {
+          l.classList.remove('bg-purple-900', 'text-white');
+          l.classList.add('text-gray-400');
+        });
+        document.querySelector('aside a[href="#contacts"]').classList.add('bg-purple-900', 'text-white');
+        document.querySelector('aside a[href="#contacts"]').classList.remove('text-gray-400');
+      });
+      
+      // Status form
+      document.getElementById('status-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const statusMessage = document.getElementById('status-message').value;
+        const statusLevel = document.getElementById('status-level').value;
+        
+        // Update status
+        updateStatus({
+          message: statusMessage,
+          level: statusLevel
+        });
+        
+        // Show success message
+        const messageDiv = document.getElementById('status-update-message');
+        messageDiv.classList.remove('hidden');
+        messageDiv.classList.add('bg-purple-900', 'text-white');
+        messageDiv.innerHTML = `
+          <p class="font-bold">Status Updated Successfully</p>
+        `;
+        
+        // Update current status display
+        loadStatusData();
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+          messageDiv.classList.add('hidden');
+        }, 3000);
+      });
+      
+      // Announcement form
+      document.getElementById('announcement-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById('announcement-title').value;
+        const content = document.getElementById('announcement-content').value;
+        
+        // Add announcement
+        addAnnouncement({
+          title: title,
+          content: content
+        });
+        
+        // Show success message
+        const messageDiv = document.getElementById('announcement-message');
+        messageDiv.classList.remove('hidden');
+        messageDiv.classList.add('bg-purple-900', 'text-white');
+        messageDiv.innerHTML = `
+          <p class="font-bold">Announcement Posted Successfully</p>
+        `;
+        
+        // Reset form
+        document.getElementById('announcement-form').reset();
+        
+        // Reload announcements
+        loadAnnouncementsData();
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+          messageDiv.classList.add('hidden');
+        }, 3000);
+      });
+      
+      // Contact filter
+      document.getElementById('contact-filter').addEventListener('change', () => {
+        loadContactsData();
+      });
+    }
+    
+    function loadDashboardData() {
+      // Load status
+      const status = getStatus();
+      document.getElementById('current-status').textContent = status.message;
+      document.getElementById('status-timestamp').textContent = `Updated: ${formatDate(status.timestamp)}`;
+      
+      const statusIndicator = document.getElementById('status-indicator');
+      if (status.level === 'warning') {
+        statusIndicator.classList.remove('bg-green-500', 'bg-red-500');
+        statusIndicator.classList.add('bg-yellow-500');
+      } else if (status.level === 'danger') {
+        statusIndicator.classList.remove('bg-green-500', 'bg-yellow-500');
+        statusIndicator.classList.add('bg-red-500');
+      } else {
+        statusIndicator.classList.remove('bg-yellow-500', 'bg-red-500');
+        statusIndicator.classList.add('bg-green-500');
+      }
+      
+      // Load announcements
+      const announcements = getAnnouncements();
+      document.getElementById('announcement-count').textContent = announcements.length;
+      if (announcements.length > 0) {
+        document.getElementById('latest-announcement').textContent = announcements[0].title;
+      }
+      
+      // Load contacts
+      const contacts = getContacts();
+      document.getElementById('contact-count').textContent = contacts.length;
+      const unreadCount = contacts.filter(contact => contact.status === 'unread').length;
+      document.getElementById('unread-count').textContent = unreadCount;
+      
+      if (unreadCount === 0) {
+        document.getElementById('unread-indicator').classList.remove('bg-purple-500');
+        document.getElementById('unread-indicator').classList.add('bg-gray-500');
+      } else {
+        document.getElementById('unread-indicator').classList.remove('bg-gray-500');
+        document.getElementById('unread-indicator').classList.add('bg-purple-500');
+      }
+    }
+    
+    function loadStatusData() {
+      const status = getStatus();
+      document.getElementById('status-view-message').textContent = status.message;
+      document.getElementById('status-view-timestamp').textContent = `Updated: ${formatDate(status.timestamp)}`;
+      document.getElementById('status-message').value = status.message;
+      document.getElementById('status-level').value = status.level;
+      
+      const statusIndicator = document.getElementById('status-view-indicator');
+      if (status.level === 'warning') {
+        statusIndicator.classList.remove('bg-green-500', 'bg-red-500');
+        statusIndicator.classList.add('bg-yellow-500');
+      } else if (status.level === 'danger') {
+        statusIndicator.classList.remove('bg-green-500', 'bg-yellow-500');
+        statusIndicator.classList.add('bg-red-500');
+      } else {
+        statusIndicator.classList.remove('bg-yellow-500', 'bg-red-500');
+        statusIndicator.classList.add('bg-green-500');
+      }
+    }
+    
+    function loadAnnouncementsData() {
+      const announcements = getAnnouncements();
+      const container = document.getElementById('announcements-list');
+      
+      if (container) {
+        if (announcements.length === 0) {
+          container.innerHTML = '<p class="text-gray-400">No announcements found.</p>';
+          return;
+        }
+        
+        container.innerHTML = '';
+        
+        announcements.forEach(announcement => {
+          const date = formatDate(announcement.date);
+          
+          const announcementElement = document.createElement('div');
+          announcementElement.className = 'bg-gray-700 p-4 rounded border border-gray-600';
+          announcementElement.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-white">${announcement.title}</h3>
+              <div class="flex items-center">
+                <span class="text-xs text-gray-400 mr-4">${date}</span>
+                <button class="delete-announcement text-red-400 hover:text-red-300 transition-colors" data-id="${announcement.id}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-3">${announcement.content}</p>
+          `;
+          
+          // Add delete event listener
+          const deleteButton = announcementElement.querySelector('.delete-announcement');
+          deleteButton.addEventListener('click', () => {
+            const id = parseInt(deleteButton.getAttribute('data-id'));
+            deleteAnnouncement(id);
+            loadAnnouncementsData();
+            loadDashboardData();
+          });
+          
+          container.appendChild(announcementElement);
+        });
+      }
+    }
+    
+    function loadContactsData() {
+      const contacts = getContacts();
+      const container = document.getElementById('contacts-list');
+      const filter = document.getElementById('contact-filter').value;
+      
+      if (container) {
+        if (contacts.length === 0) {
+          container.innerHTML = '<p class="text-gray-400">No messages found.</p>';
+          return;
+        }
+        
+        container.innerHTML = '';
+        
+        // Filter contacts based on type
+        let filteredContacts = contacts;
+        if (filter !== 'all') {
+          filteredContacts = contacts.filter(contact => contact.type === filter);
+        }
+        
+        if (filteredContacts.length === 0) {
+          container.innerHTML = '<p class="text-gray-400">No messages found with the selected filter.</p>';
+          return;
+        }
+        
+        filteredContacts.forEach(contact => {
+          const date = formatDate(contact.date);
+          
+          const contactElement = document.createElement('div');
+          contactElement.className = `bg-gray-700 p-4 rounded border ${contact.status === 'unread' ? 'border-purple-500' : 'border-gray-600'}`;
+          
+          // Different display based on contact type
+          if (contact.type === 'contact') {
+            contactElement.innerHTML = `
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-semibold text-white">${contact.subject || 'No Subject'}</h3>
+                <span class="text-xs text-gray-400">${date}</span>
+              </div>
+              <p class="text-sm text-gray-400 mb-3">From: ${contact.name} (${contact.email})</p>
+              <p class="text-gray-300 mb-2">${contact.message}</p>
+              <div class="flex items-center text-xs text-gray-400">
+                <span class="mr-2">Priority: ${contact.priority || 'normal'}</span>
+              </div>
+            `;
+          } else if (contact.type === 'recruitment') {
+            contactElement.innerHTML = `
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-semibold text-white">Recruitment Application</h3>
+                <span class="text-xs text-gray-400">${date}</span>
+              </div>
+              <p class="text-sm text-gray-400 mb-2">From: ${contact.name} (${contact.email})</p>
+              <p class="text-gray-300 mb-1"><span class="text-purple-400">Age:</span> ${contact.age}</p>
+              <p class="text-gray-300 mb-1"><span class="text-purple-400">Preferred Division:</span> ${contact.division}</p>
+              <p class="text-gray-300 mb-1"><span class="text-purple-400">Experience:</span> ${contact.experience}</p>
+              <p class="text-gray-300 mb-2"><span class="text-purple-400">Skills:</span> ${contact.skills}</p>
+            `;
+          }
+          
+          container.appendChild(contactElement);
+          
+          // Update status to read after displaying
+          if (contact.status === 'unread') {
+            contact.status = 'read';
+            localStorage.setItem('shadowcorp_contacts', JSON.stringify(contacts));
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
